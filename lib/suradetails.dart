@@ -42,23 +42,24 @@ class _SuraDetailsState extends State<SuraDetails> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => Divider(
-                    color: MyThemeData.primaryColor,
-                    thickness: 1,
-                    indent: 40,
-                    endIndent: 40,
+                child:  ListView.separated(
+                    separatorBuilder: (context, index) => Divider(
+                      color: MyThemeData.primaryColor,
+                      thickness: 1,
+                      indent: 40,
+                      endIndent: 40,
+                    ),
+                    itemBuilder: (context, index) {
+                      return Center(
+                          child: Text(
+                        verses[index],
+                        style: Theme.of(context).textTheme.bodySmall,
+                        textAlign: TextAlign.center,
+                            textDirection: TextDirection.rtl,
+                      ));
+                    },
+                    itemCount: verses.length,
                   ),
-                  itemBuilder: (context, index) {
-                    return Center(
-                        child: Text(
-                      verses[index],
-                      style: Theme.of(context).textTheme.bodySmall,
-                      textAlign: TextAlign.center,
-                    ));
-                  },
-                  itemCount: verses.length,
-                ),
               ),
             ),
           ),
