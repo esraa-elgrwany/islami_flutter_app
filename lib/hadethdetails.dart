@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:islami_project/mythemedata.dart';
-import 'package:islami_project/suramodel.dart';
+import 'package:islami_project/ahadethmodel.dart';
 
-class SuraDetails extends StatefulWidget {
-  static const String routeName = "SuraDetails";
+import 'mythemedata.dart';
+
+class HadethDetails extends StatefulWidget{
+  static const String routeName="hadethDetails";
 
   @override
-  State<SuraDetails> createState() => _SuraDetailsState();
+  State<HadethDetails> createState() => _HadethDetailsState();
 }
 
-class _SuraDetailsState extends State<SuraDetails> {
-  List<String> verses = [];
-
+class _HadethDetailsState extends State<HadethDetails> {
   @override
   Widget build(BuildContext context) {
-    var args = ModalRoute.of(context)?.settings.arguments as SuraModel;
-    if (verses.isEmpty) {
-      loadFile(args.index);
-    }
+    var args=ModalRoute.of(context)?.settings.arguments as AhadethModel;
     return Stack(
       children: [
         Image.asset(
@@ -29,7 +24,7 @@ class _SuraDetailsState extends State<SuraDetails> {
         Scaffold(
           appBar: AppBar(
             title: Text(
-              args.name,
+              args.title,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
@@ -51,14 +46,13 @@ class _SuraDetailsState extends State<SuraDetails> {
                   ),
                   itemBuilder: (context, index) {
                     return Center(
-                        child: Text(
-                      verses[index],
-                      style: Theme.of(context).textTheme.bodySmall,
-                      textAlign: TextAlign.center,
-                      textDirection: TextDirection.rtl,
-                    ));
+                        child: Text(args.content[index],
+                          style: Theme.of(context).textTheme.bodySmall,
+                          textAlign: TextAlign.center,
+                          textDirection: TextDirection.rtl,
+                        ));
                   },
-                  itemCount: verses.length,
+                  itemCount:args.content.length ,
                 ),
               ),
             ),
@@ -66,12 +60,6 @@ class _SuraDetailsState extends State<SuraDetails> {
         ),
       ],
     );
-  }
 
-  loadFile(int index) async {
-    String file = await rootBundle.loadString("assets/files/${index + 1}.txt");
-    List<String> lines = file.split("/n");
-    verses = lines;
-    setState(() {});
   }
 }
