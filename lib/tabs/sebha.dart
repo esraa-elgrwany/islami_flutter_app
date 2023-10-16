@@ -16,7 +16,7 @@ class _SebhaTabState extends State<SebhaTab> {
   int anime = 0;
   double angle = 0;
   List<String> tasbeh = ["سبحان الله", "الحمد لله", "الله اكبر"];
- Color? changeColor;
+
   @override
   Widget build(BuildContext context) {
     var pro = Provider.of<MyProvider>(context);
@@ -26,7 +26,7 @@ class _SebhaTabState extends State<SebhaTab> {
         Stack(
           alignment: Alignment.topCenter,
           children: [
-            Image.asset('assets/images/head_of_seb7a.png', color: changeColor),
+            Image.asset('assets/images/head_of_seb7a.png', color: animateColor(context)),
             Padding(
                 padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.09),
@@ -35,13 +35,13 @@ class _SebhaTabState extends State<SebhaTab> {
                       count++;
                       resetTasbeh();
                       anime++;
-                      animateColor();
+                      animateColor(context);
                       setState(() {});
                     },
                     child: Transform.rotate(
                         angle: angle,
                         child: Image.asset('assets/images/body_of_seb7a.png',
-                            color: changeColor)))),
+                            color: animateColor(context))))),
           ],
         ),
         SizedBox(
@@ -122,14 +122,17 @@ class _SebhaTabState extends State<SebhaTab> {
     setState(() {});
   }
 
-  animateColor() {
+  animateColor(BuildContext context) {
+    Color? changeColor;
     if (anime % 2 == 0) {
     changeColor = Theme.of(context).colorScheme.surface;
-      setState(() {});
+    setState(() {});
+    return changeColor;
     }
     if (anime % 2 != 0) {
       changeColor = Theme.of(context).colorScheme.onBackground;
       setState(() {});
+      return changeColor;
     }
   }
 }
