@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:islami_project/ahadethmodel.dart';
+import 'package:islami_project/providers/my_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'mythemedata.dart';
 
@@ -13,11 +15,12 @@ class HadethDetails extends StatefulWidget{
 class _HadethDetailsState extends State<HadethDetails> {
   @override
   Widget build(BuildContext context) {
+    var provider=Provider.of<MyProvider>(context);
     var args=ModalRoute.of(context)?.settings.arguments as AhadethModel;
     return Stack(
       children: [
         Image.asset(
-          "assets/images/background.png",
+          provider.getBackground(),
           fit: BoxFit.fill,
           width: double.infinity,
         ),
@@ -33,13 +36,13 @@ class _HadethDetailsState extends State<HadethDetails> {
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
-                side: BorderSide(color: MyThemeData.primaryColor, width: 2),
+                side: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.separated(
                   separatorBuilder: (context, index) => Divider(
-                    color: MyThemeData.primaryColor,
+                    color: Theme.of(context).colorScheme.primary,
                     thickness: 1,
                     indent: 40,
                     endIndent: 40,
@@ -47,7 +50,10 @@ class _HadethDetailsState extends State<HadethDetails> {
                   itemBuilder: (context, index) {
                     return Center(
                         child: Text(args.content[index],
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: provider.modeApp==ThemeMode.light?MyThemeData.blackColor:
+                          MyThemeData.yellow,
+                          ),
                           textAlign: TextAlign.center,
                           textDirection: TextDirection.rtl,
                         ));
