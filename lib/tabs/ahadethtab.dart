@@ -4,35 +4,47 @@ import 'package:islami_project/ahadethmodel.dart';
 import 'package:islami_project/hadethdetails.dart';
 import 'package:islami_project/mythemedata.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:islami_project/providers/my_provider.dart';
+import 'package:provider/provider.dart';
 
-class AhadethTab extends StatelessWidget {
+class AhadethTab extends StatefulWidget{
+  @override
+  State<AhadethTab> createState() => _AhadethTabState();
+}
+
+class _AhadethTabState extends State<AhadethTab> {
   List<AhadethModel> allAhadeth = [];
 
   @override
   Widget build(BuildContext context) {
+    var pro=Provider.of<MyProvider>(context);
     loodAhadethFile();
     return Center(
       child: Column(
         children: [
           Image.asset("assets/images/ahadeth_image.png"),
           Divider(
-            color: MyThemeData.primaryColor,
+            color: pro.modeApp==ThemeMode.light?MyThemeData.primaryColor:
+            MyThemeData.yellow,
             thickness: 2,
           ),
           Text(
             AppLocalizations.of(context)!.ahadeth,
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: MyThemeData.blackColor,
+              color: pro.modeApp==ThemeMode.light?MyThemeData.blackColor:
+              Colors.white,
             ),
           ),
           Divider(
-            color: MyThemeData.primaryColor,
+            color: pro.modeApp==ThemeMode.light?MyThemeData.primaryColor:
+            MyThemeData.yellow,
             thickness: 2,
           ),
           Expanded(
               child: ListView.separated(
                 separatorBuilder: (context, index) => Divider(
-                  color: MyThemeData.primaryColor,
+                  color: pro.modeApp==ThemeMode.light?MyThemeData.primaryColor:
+                  MyThemeData.yellow,
                   thickness: 1,
                   indent: 40,
                   endIndent: 40,
@@ -49,7 +61,8 @@ class AhadethTab extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
-                          ?.copyWith(color: MyThemeData.blackColor),
+                          ?.copyWith(color: pro.modeApp==ThemeMode.light?MyThemeData.blackColor:
+                      Colors.white,),
                     ),
                   );
                 },
@@ -71,6 +84,8 @@ class AhadethTab extends StatelessWidget {
         List<String> content = hadethLines;
         AhadethModel hadethModel = AhadethModel(title, content);
         allAhadeth.add(hadethModel);
+        setState(() {
+        });
       }
     }).catchError((e) {
       print(e.toString());
