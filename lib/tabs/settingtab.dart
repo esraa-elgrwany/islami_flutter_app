@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:islami_project/BottomSheets/languagebottomsheet.dart';
 import 'package:islami_project/BottomSheets/themingbottomsheet.dart';
 import 'package:islami_project/mythemedata.dart';
@@ -18,7 +19,7 @@ class _SettingTabState extends State<SettingTab> {
   Widget build(BuildContext context) {
     var pro=Provider.of<MyProvider>(context);
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(28),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -26,14 +27,15 @@ class _SettingTabState extends State<SettingTab> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.secondary)),
+                  .copyWith(color: Theme.of(context).colorScheme.onBackground)),
+           SizedBox(height: 20.h,),
            Container(
               width: double.infinity,
               padding: EdgeInsets.all(10),
-              margin: EdgeInsets.symmetric(horizontal: 10),
+              margin: EdgeInsets.symmetric(horizontal: 10.w),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  border: Border.all(color: MyThemeData.primaryColor)),
+                  borderRadius: BorderRadius.circular(25.r),
+                  border: Border.all(color:Theme.of(context).colorScheme.surface)),
               child: Row(
                 children: [
                   Text(pro.languageCode=="en"?AppLocalizations.of(context)!.eng
@@ -41,7 +43,7 @@ class _SettingTabState extends State<SettingTab> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium!
-                          .copyWith(color:Theme.of(context).colorScheme.secondary,)),
+                          .copyWith(color:Theme.of(context).colorScheme.onBackground,)),
                   Spacer(),
                   InkWell(
                       onTap: showLangugeBottomSheet,
@@ -50,24 +52,25 @@ class _SettingTabState extends State<SettingTab> {
               ),
             ),
           SizedBox(
-            height: 30,
+            height: 30.h,
           ),
           Text(AppLocalizations.of(context)!.theme,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: Theme.of(context).colorScheme.onBackground,
                   )),
+         SizedBox(height: 20.h,),
          Container(
               width: double.infinity,
               padding: EdgeInsets.all(10),
-              margin: EdgeInsets.symmetric(horizontal: 10),
+              margin: EdgeInsets.symmetric(horizontal: 10.w),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  border: Border.all(color: MyThemeData.primaryColor)),
+                  borderRadius: BorderRadius.circular(25.r),
+                  border: Border.all(color:Theme.of(context).colorScheme.surface)),
               child: Row(
                 children: [
                   Text(pro.modeApp==ThemeMode.light?AppLocalizations.of(context)!.light:AppLocalizations.of(context)!.dark,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: Theme.of(context).colorScheme.onBackground,
                           )),
                   Spacer(),
                   InkWell(
@@ -86,7 +89,7 @@ class _SettingTabState extends State<SettingTab> {
       context: context,
       //isScrollControlled: true,
       shape: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           borderSide: BorderSide(color: Colors.transparent)),
       builder: (context) => LanguageBottomSheet(),
     );
@@ -97,7 +100,7 @@ class _SettingTabState extends State<SettingTab> {
       context: context,
       //isScrollControlled: true,
       shape: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           borderSide: BorderSide(color: Colors.transparent)),
       builder: (context) => ThemingBottomSheet(),
     );

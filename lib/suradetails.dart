@@ -52,7 +52,7 @@ class _SuraDetailsState extends State<SuraDetails> {
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.separated(
                     separatorBuilder: (context, index) =>  Divider(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Theme.of(context).colorScheme.surface,
                         thickness: 2,
                         indent: 40,
                         endIndent: 40,
@@ -62,7 +62,7 @@ class _SuraDetailsState extends State<SuraDetails> {
                           child: Text(
                        "${pro.verses[index]}(${index+1})",
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: Theme.of(context).colorScheme.onBackground,
                         ),
                         textAlign: TextAlign.center,
                         textDirection: TextDirection.rtl,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:islami_project/mythemedata.dart';
 import 'package:islami_project/providers/my_provider.dart';
 import 'package:islami_project/providers/sura_details_provider.dart';
@@ -163,8 +164,8 @@ class QuranTab extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            width: 2,
-                            height: 28,
+                            width: 2.w,
+                            height: 28.h,
                             child: VerticalDivider(
                               color: pro.modeApp == ThemeMode.light
                                   ? MyThemeData.primaryColor
@@ -243,7 +244,7 @@ class QuranTab extends StatelessWidget {
                                 ),
                                 Expanded(
                                   child: Center(
-                                    child:provider.versesLength.length<10?
+                                    child:provider.versesLength.length<15?
                                     CircularProgressIndicator(
                                       color: Theme.of(context).colorScheme.surface,
                                     )

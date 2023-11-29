@@ -24,7 +24,9 @@ class LanguageBottomSheet extends StatelessWidget {
                       .textTheme
                       .bodyMedium
                       ?.copyWith(color:
-                  Theme.of(context).colorScheme.secondary
+                      provider.modeApp==ThemeMode.light?
+                      MyThemeData.primaryColor:
+                      Colors.white
                  ),
                 ),
                 Spacer(),
@@ -52,7 +54,9 @@ class LanguageBottomSheet extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
-                      ?.copyWith(color:  Theme.of(context).colorScheme.secondary
+                      ?.copyWith(color:  provider.modeApp==ThemeMode.dark?
+                  MyThemeData.yellow:
+                  MyThemeData.blackColor
                  ),
                 ),
                 Spacer(),

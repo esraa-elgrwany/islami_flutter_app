@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyThemeData{
@@ -31,17 +32,17 @@ class MyThemeData{
       ),
       textTheme: TextTheme(
         bodySmall: GoogleFonts.elMessiri(
-          fontSize: 20,
+          fontSize: 20.sp,
           fontWeight: FontWeight.w400,
           color: blackColor,
         ),
         bodyMedium: GoogleFonts.elMessiri(
-          fontSize: 25,
+          fontSize: 25.sp,
           fontWeight: FontWeight.w700,
           color:Colors.white,
         ),
         bodyLarge: GoogleFonts.elMessiri(
-          fontSize: 30,
+          fontSize: 30.sp,
           fontWeight: FontWeight.bold,
           color: blackColor,
         ),
@@ -77,17 +78,17 @@ class MyThemeData{
       ),
       textTheme: TextTheme(
         bodySmall: GoogleFonts.elMessiri(
-          fontSize: 20,
+          fontSize: 20.sp,
           fontWeight: FontWeight.w400,
           color:Colors.white,
         ),
         bodyMedium: GoogleFonts.elMessiri(
-          fontSize: 25,
+          fontSize: 25.sp,
           fontWeight: FontWeight.w700,
           color:Colors.yellow,
         ),
         bodyLarge: GoogleFonts.elMessiri(
-          fontSize: 30,
+          fontSize: 30.sp,
           fontWeight: FontWeight.bold,
           color:Colors.white,
         ),
