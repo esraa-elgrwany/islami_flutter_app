@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:islami_project/mythemedata.dart';
 import 'package:islami_project/providers/my_provider.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,7 @@ class _SebhaTabState extends State<SebhaTab> {
           ],
         ),
         SizedBox(
-          height: 20,
+          height: 40.h,
         ),
         Text("عدد التسبيحات",
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -55,14 +56,14 @@ class _SebhaTabState extends State<SebhaTab> {
                   fontWeight: FontWeight.w400,
                 )),
         SizedBox(
-          height: 20,
+          height:34.h,
         ),
         Container(
-            width: 69,
-            height: 81,
+            width: 69.w,
+            height: 81.h,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.circular(30),
+              color: Theme.of(context).colorScheme.primary.withOpacity(.5),
+              borderRadius: BorderRadius.circular(30.r),
             ),
             child: Center(
               child: Text(
@@ -77,23 +78,23 @@ class _SebhaTabState extends State<SebhaTab> {
               ),
             )),
         SizedBox(
-          height: 10,
+          height:20.h,
         ),
         Container(
-          width: 147,
-          height: 50,
+          width: 137.w,
+          height: 51.h,
           decoration: BoxDecoration(
             color: pro.modeApp == ThemeMode.light
                 ? MyThemeData.primaryColor
                 : MyThemeData.yellow,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(20.r),
           ),
           child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
                 child: Text(
                   tasbeh[index],
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: pro.modeApp == ThemeMode.light
                             ? Colors.white
                             : MyThemeData.blackColor,
@@ -130,7 +131,7 @@ class _SebhaTabState extends State<SebhaTab> {
     return changeColor;
     }
     if (anime % 2 != 0) {
-      changeColor = Theme.of(context).colorScheme.onBackground;
+      changeColor = Theme.of(context).colorScheme.surface.withOpacity(.5);
       setState(() {});
       return changeColor;
     }

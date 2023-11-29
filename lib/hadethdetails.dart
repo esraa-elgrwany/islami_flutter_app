@@ -42,7 +42,7 @@ class _HadethDetailsState extends State<HadethDetails> {
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.separated(
                   separatorBuilder: (context, index) => Divider(
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.surface,
                     thickness: 1,
                     indent: 40,
                     endIndent: 40,
@@ -52,7 +52,7 @@ class _HadethDetailsState extends State<HadethDetails> {
                         child: Text(args.content[index],
                           style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           color: provider.modeApp==ThemeMode.light?MyThemeData.blackColor:
-                          MyThemeData.yellow,
+                          Colors.white,
                           ),
                           textAlign: TextAlign.center,
                           textDirection: TextDirection.rtl,
