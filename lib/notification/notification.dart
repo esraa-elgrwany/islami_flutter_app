@@ -13,16 +13,7 @@ class NotificationService {
   static DateTime selectedTimeNight = DateTime.now();
   static DateTime endTime = DateTime.now().add(Duration(minutes:30));
   static DateTime endTimeNight = DateTime.now().add(Duration(minutes:30));
-  static const  NotificationDetails platformChannelSpecifics = NotificationDetails(
-    android: AndroidNotificationDetails(
-      "channel_Id",
-      "channel_Name",
-      channelDescription: 'description',
-      importance: Importance.max,
-      priority: Priority.high,
-    ),
-    iOS: DarwinNotificationDetails(),
-  );
+
 
   static Future<void> onDidReceiveNotification(
       NotificationResponse notificationResponse) async {
@@ -69,8 +60,18 @@ class NotificationService {
   }
 
   //show instant notification
-  static Future<void> showInstantNotification(String title, String body) async {
-
+  static Future<void> showInstantNotification(String title, String body) async
+  {
+     const  NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: AndroidNotificationDetails(
+        "channel_Id",
+        "channel_Name",
+        channelDescription: 'description',
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+      iOS: DarwinNotificationDetails(),
+    );
     await flutterLocalNotificationsPlugin.show(
         0, title, body, platformChannelSpecifics);
   }
@@ -86,22 +87,35 @@ class NotificationService {
         endTime,
         tz.local
     );
+
+     const  NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: AndroidNotificationDetails(
+        "channel_Id",
+        "channel_Name",
+        channelDescription: 'description',
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+      iOS: DarwinNotificationDetails(),
+    );
     if (scheduledTime.isBefore(tz.TZDateTime.now(tz.local))) {
       scheduledTime = scheduledTime.add(Duration(days: 1));
     }
 
     for (int i = 0; i < messages.length; i++) {
+      if (scheduledTime.isBefore(stopTime)) {
+        tz.TZDateTime notifyTime = tz.TZDateTime.from(scheduledTime, tz.local);
+
       tz.TZDateTime notificationTime =
-          scheduledTime.add(Duration(seconds: i * separateTime.inSeconds));
+      notifyTime.add(Duration(seconds: i * separateTime.inSeconds));
       print("Notification scheduled at: $notificationTime");
-      if (notificationTime.isBefore(stopTime)) {
-        tz.TZDateTime notifyTime = tz.TZDateTime.from(notificationTime, tz.local);
+
 
      await flutterLocalNotificationsPlugin.zonedSchedule(
         i,
         "Azkar",
         messages[i],
-       notifyTime,
+       notificationTime,
         platformChannelSpecifics,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
@@ -118,4 +132,37 @@ class NotificationService {
     print(tz.TZDateTime.now);
   }
   }
+
+ static Future<void> schedulePrayerNotification(
+      String title, String body, DateTime time) async {
+    tz.TZDateTime scheduledTime = tz.TZDateTime.from(
+        time,
+        tz.local
+    );
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+        "channel_Id",
+        "channel_Name",
+        channelDescription: 'description',
+        importance: Importance.max,
+      priority: Priority.high,
+        sound: RawResourceAndroidNotificationSound('beautifull_azan')
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      title,
+      body,
+      scheduledTime,
+      platformChannelSpecifics,
+      uiLocalNotificationDateInterpretation:
+      UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode:AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
 }

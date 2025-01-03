@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:islami_project/mythemedata.dart';
+import 'package:islami_project/providers/my_provider.dart';
+import 'package:provider/provider.dart';
 
 
 class PrayRow extends StatelessWidget{
@@ -11,13 +14,14 @@ class PrayRow extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    var pro=Provider.of<MyProvider>(context);
     return Container(
       width: double.infinity,
       height: 54.h,
-      padding: EdgeInsets.all(12),
+      padding: EdgeInsets.all(8),
       margin: EdgeInsets.only(left: 30,right: 30,bottom: 12,top: 12),
       decoration: BoxDecoration(
-        color: Color(0XFFcbb471),
+        color:pro.isDark?MyThemeData.yellow: Color(0XFFcbb471),
         borderRadius: BorderRadiusDirectional.circular(18)
       ),
       child: Row(

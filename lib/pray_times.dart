@@ -1,7 +1,9 @@
 import 'package:adhan/adhan.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:islami_project/mythemedata.dart';
+import 'package:islami_project/notification/notification.dart';
 import 'package:islami_project/pray_row.dart';
 import 'package:islami_project/providers/my_provider.dart';
 import 'package:provider/provider.dart';
@@ -24,18 +26,19 @@ class _PrayTimesScreenState extends State<PrayTimesScreen> {
     final params = CalculationMethod.karachi.getParameters();
     params.madhab = Madhab.hanafi;
     final prayerTimes = PrayerTimes.today(coordinates, params);
-
+   bool isSwitched=false;
     return
       Stack(
         children: [
           Image.asset("assets/images/LPrayTime.jpg",
             fit: BoxFit.fill
-            ,height: MediaQuery.of(context).size.height-200,
-          color: pro.isDark?MyThemeData.darkPrimary:MyThemeData.primaryColor,),
+            ,height: MediaQuery.of(context).size.height,
+         ),
           Scaffold(
+            backgroundColor: pro.isDark?MyThemeData.darkPrimary.withOpacity(.8):Colors.transparent,
             appBar: AppBar(
               leading: Container(
-                margin: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(4),
                 child: Center(
                   child: IconButton(onPressed:  () {
                   Navigator.pop(context);
@@ -43,6 +46,22 @@ class _PrayTimesScreenState extends State<PrayTimesScreen> {
                   Theme.of(context).colorScheme.surface,) ),
                 ),
               ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Switch(
+                      activeColor:Theme.of(context).colorScheme.primary,
+                      activeTrackColor: Colors.grey[100],
+                      inactiveTrackColor:pro.isDark? Colors.grey:Colors.grey[200],
+                      value:isSwitched
+                      ,
+                      onChanged: (value) {
+                        setState(() {
+                          isSwitched=value;
+                        });
+                      }),
+                ),
+              ],
             ),
             body: Center(
               child: Column(
@@ -51,7 +70,7 @@ class _PrayTimesScreenState extends State<PrayTimesScreen> {
                   SizedBox(height: 16,),
                   Text("مواقيت الصلاة"
                       ,style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground ,
+                        color:Theme.of(context).colorScheme.onBackground ,
                       )
                   ),
                   SizedBox(height: 12,),
@@ -78,6 +97,44 @@ class _PrayTimesScreenState extends State<PrayTimesScreen> {
             ),
           ),
         ],
+    );
+  }
+  void playAzan() {
+    AssetsAudioPlayer.newPlayer().open(
+      Audio("assets/sounds/beautifull_azan.mp3"),
+      autoStart: true,
+      showNotification: true,
+    );
+  }
+  void schedulePrayerTimes(PrayerTimes prayerTimes) {
+    NotificationService.schedulePrayerNotification(
+      "Fajr Prayer",
+      "Time for Fajr prayer",
+      prayerTimes.fajr,
+    );
+
+    NotificationService.schedulePrayerNotification(
+      "Dhuhr Prayer",
+      "Time for Dhuhr prayer",
+      prayerTimes.dhuhr,
+    );
+
+    NotificationService.schedulePrayerNotification(
+      "Asr Prayer",
+      "Time for Asr prayer",
+      prayerTimes.asr,
+    );
+
+    NotificationService.schedulePrayerNotification(
+      "Maghrib Prayer",
+      "Time for Maghrib prayer",
+      prayerTimes.maghrib,
+    );
+
+    NotificationService.schedulePrayerNotification(
+      "Isha Prayer",
+      "Time for Isha prayer",
+      prayerTimes.isha,
     );
   }
 }
