@@ -98,15 +98,43 @@ class _MorningState extends State<Night> {
                         ),
                         Row(
                           children: [
-                            Text(
-                                " الوقت المحدد لارسال الاشعارات  ${NotificationService.selectedTimeNight.hour}"
-                                    ":${NotificationService.selectedTimeNight.minute}",
-                                style: Theme.of(context)
+                            Row(
+                              children: [
+                                Text(
+                                    " الوقت المحدد لارسال الاشعارات  ",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(
+                                      fontSize: 14,
+                                    )),
+                                Text("${NotificationService.selectedTimeNight.minute}:", style: Theme.of(context)
                                     .textTheme
                                     .bodySmall!
                                     .copyWith(
                                   fontSize: 16,
                                 )),
+                                Text(NotificationService.selectedTimeNight.hour==24?"0":
+                                NotificationService.selectedTimeNight.hour>12?"${NotificationService.selectedTimeNight.hour-12}":
+                                "${NotificationService.selectedTimeNight.hour}", style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                  fontSize: 16,
+                                )
+                                ),
+                                SizedBox(width: 6.w,),
+                                Text(NotificationService.selectedTimeNight.hour==24?"AM":
+                                NotificationService.selectedTimeNight.hour>12?"PM":
+                                "AM", style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                  fontSize: 16,
+                                )
+                                ),
+                              ],
+                            ),
                             Spacer(),
                             InkWell(
                                 onTap: () {

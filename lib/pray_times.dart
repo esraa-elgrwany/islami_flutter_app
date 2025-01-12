@@ -9,8 +9,9 @@ import 'package:islami_project/providers/my_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class PrayTimesScreen extends StatefulWidget{
-  static const String routeName="PrayTimes";
+class PrayTimesScreen extends StatefulWidget {
+  static const String routeName = "PrayTimes";
+
   const PrayTimesScreen({super.key});
 
   @override
@@ -18,87 +19,127 @@ class PrayTimesScreen extends StatefulWidget{
 }
 
 class _PrayTimesScreenState extends State<PrayTimesScreen> {
+  bool isSwitched = false;
+
   @override
   Widget build(BuildContext context) {
-    var pro=Provider.of<MyProvider>(context);
+    var pro = Provider.of<MyProvider>(context);
 
     final coordinates = Coordinates(30.0444, 31.2357);
     final params = CalculationMethod.karachi.getParameters();
     params.madhab = Madhab.hanafi;
     final prayerTimes = PrayerTimes.today(coordinates, params);
-   bool isSwitched=false;
-    return
-      Stack(
-        children: [
-          Image.asset("assets/images/LPrayTime.jpg",
-            fit: BoxFit.fill
-            ,height: MediaQuery.of(context).size.height,
-         ),
-          Scaffold(
-            backgroundColor: pro.isDark?MyThemeData.darkPrimary.withOpacity(.8):Colors.transparent,
-            appBar: AppBar(
-              leading: Container(
-                padding: const EdgeInsets.all(4),
-                child: Center(
-                  child: IconButton(onPressed:  () {
-                  Navigator.pop(context);
-                  }, icon:Icon(Icons.arrow_back_rounded,size: 30,color:
-                  Theme.of(context).colorScheme.surface,) ),
-                ),
+    return Stack(
+      children: [
+        Image.asset(
+          "assets/images/LPrayTime.jpg",
+          fit: BoxFit.fill,
+          height: MediaQuery.of(context).size.height,
+        ),
+        Scaffold(
+          backgroundColor: pro.isDark
+              ? MyThemeData.darkPrimary.withOpacity(.9)
+              : Colors.transparent,
+          appBar: AppBar(
+            leading: Container(
+              padding: const EdgeInsets.all(4),
+              child: Center(
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.arrow_back_rounded,
+                      size: 30,
+                      color: Theme.of(context).colorScheme.surface,
+                    )),
               ),
-              actions: [
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Switch(
+                    activeColor: Theme.of(context).colorScheme.primary,
+                    activeTrackColor: Colors.grey[100],
+                    inactiveTrackColor:
+                        pro.isDark ? Colors.grey : Colors.grey[200],
+                    value: isSwitched,
+                    onChanged: (value) {
+                      setState(() {
+                        isSwitched = value;
+                        if (isSwitched) {
+                          schedulePrayerTimes(prayerTimes);
+                        } else {
+                          NotificationService.flutterLocalNotificationsPlugin
+                              .cancelAll();
+                        }
+                      });
+                    }),
+              ),
+            ],
+          ),
+          body: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 16,
+                ),
+                Text("مواقيت الصلاة",
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.onBackground,
+                        )),
+                SizedBox(
+                  height: 12,
+                ),
                 Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Switch(
-                      activeColor:Theme.of(context).colorScheme.primary,
-                      activeTrackColor: Colors.grey[100],
-                      inactiveTrackColor:pro.isDark? Colors.grey:Colors.grey[200],
-                      value:isSwitched
-                      ,
-                      onChanged: (value) {
-                        setState(() {
-                          isSwitched=value;
-                        });
-                      }),
+                  padding: const EdgeInsets.all(12),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        PrayRow(
+                          txt: "الفجر",
+                          icon: Icon(Icons.sunny_snowing),
+                          time: DateFormat.jm().format(prayerTimes.fajr),
+                        ),
+                        PrayRow(
+                          txt: "الصبح",
+                          icon: Icon(Icons.wb_cloudy_outlined),
+                          time: DateFormat.jm().format(prayerTimes.sunrise),
+                        ),
+                        PrayRow(
+                          txt: "الظهر",
+                          icon: Icon(Icons.wb_sunny_rounded),
+                          time: DateFormat.jm().format(prayerTimes.dhuhr),
+                        ),
+                        PrayRow(
+                          txt: "العصر",
+                          icon: Icon(Icons.wb_sunny_outlined),
+                          time: DateFormat.jm().format(prayerTimes.asr),
+                        ),
+                        PrayRow(
+                          txt: "المغرب",
+                          icon: Icon(Icons.mode_night_outlined),
+                          time: DateFormat.jm().format(prayerTimes.maghrib),
+                        ),
+                        PrayRow(
+                          txt: "العشاء",
+                          icon: Icon(Icons.nights_stay_rounded),
+                          time: DateFormat.jm().format(prayerTimes.isha),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
-            body: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 16,),
-                  Text("مواقيت الصلاة"
-                      ,style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color:Theme.of(context).colorScheme.onBackground ,
-                      )
-                  ),
-                  SizedBox(height: 12,),
-                  Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          PrayRow(txt: "الفجر",
-                            icon: Icon(Icons.sunny_snowing),
-                            time: DateFormat.jm().format(prayerTimes.fajr),),
-                          PrayRow(txt: "الصبح",icon: Icon(Icons.wb_cloudy_outlined),time: DateFormat.jm().format(prayerTimes.sunrise),),
-                          PrayRow(txt: "الظهر",icon: Icon(Icons.wb_sunny_rounded),time: DateFormat.jm().format(prayerTimes.dhuhr),),
-                          PrayRow(txt: "العصر",icon: Icon(Icons.wb_sunny_outlined),time: DateFormat.jm().format(prayerTimes.asr),),
-                          PrayRow(txt: "المغرب",icon: Icon(Icons.mode_night_outlined),time: DateFormat.jm().format(prayerTimes.maghrib),),
-                          PrayRow(txt: "العشاء",icon: Icon(Icons.nights_stay_rounded),time: DateFormat.jm().format(prayerTimes.isha),),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ),
-        ],
+        ),
+      ],
     );
   }
+
   void playAzan() {
     AssetsAudioPlayer.newPlayer().open(
       Audio("assets/sounds/beautifull_azan.mp3"),
@@ -106,35 +147,49 @@ class _PrayTimesScreenState extends State<PrayTimesScreen> {
       showNotification: true,
     );
   }
+
   void schedulePrayerTimes(PrayerTimes prayerTimes) {
     NotificationService.schedulePrayerNotification(
+      0,
       "Fajr Prayer",
       "Time for Fajr prayer",
       prayerTimes.fajr,
     );
-
+    print("-----------------${prayerTimes.fajr}");
     NotificationService.schedulePrayerNotification(
+      0,
+      "Fajr Prayer",
+      "Time for Fajr prayer",
+      prayerTimes.sunrise,
+    );
+    print("-----------------${prayerTimes.sunrise}");
+    NotificationService.schedulePrayerNotification(
+      1,
       "Dhuhr Prayer",
       "Time for Dhuhr prayer",
       prayerTimes.dhuhr,
     );
-
-    NotificationService.schedulePrayerNotification(
+    print("-----------------${prayerTimes.dhuhr}");
+    NotificationService.schedulePrayerNotification(2,
       "Asr Prayer",
       "Time for Asr prayer",
       prayerTimes.asr,
     );
 
-    NotificationService.schedulePrayerNotification(
+    NotificationService.schedulePrayerNotification(3,
       "Maghrib Prayer",
       "Time for Maghrib prayer",
       prayerTimes.maghrib,
     );
 
-    NotificationService.schedulePrayerNotification(
+    NotificationService.schedulePrayerNotification(4,
       "Isha Prayer",
       "Time for Isha prayer",
       prayerTimes.isha,
     );
+  }
+
+  Future<void> onNotificationTap() async {
+    playAzan();
   }
 }

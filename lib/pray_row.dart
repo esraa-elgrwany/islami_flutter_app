@@ -21,7 +21,7 @@ class PrayRow extends StatelessWidget{
       padding: EdgeInsets.all(8),
       margin: EdgeInsets.only(left: 30,right: 30,bottom: 12,top: 12),
       decoration: BoxDecoration(
-        color:pro.isDark?MyThemeData.yellow: Color(0XFFcbb471),
+        color:pro.isDark?MyThemeData.darkPrimary: Color(0XFFcbb471),
         borderRadius: BorderRadiusDirectional.circular(18)
       ),
       child: Row(

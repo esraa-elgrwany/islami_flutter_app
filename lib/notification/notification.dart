@@ -95,6 +95,7 @@ class NotificationService {
         channelDescription: 'description',
         importance: Importance.max,
         priority: Priority.high,
+        playSound: true
       ),
       iOS: DarwinNotificationDetails(),
     );
@@ -133,12 +134,16 @@ class NotificationService {
   }
   }
 
- static Future<void> schedulePrayerNotification(
+ static Future<void> schedulePrayerNotification(int id,
       String title, String body, DateTime time) async {
     tz.TZDateTime scheduledTime = tz.TZDateTime.from(
         time,
         tz.local
     );
+
+    if (scheduledTime.isBefore(tz.TZDateTime.now(tz.local))) {
+      scheduledTime = scheduledTime.add(Duration(days: 1));
+    }
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
         "channel_Id",
@@ -146,14 +151,15 @@ class NotificationService {
         channelDescription: 'description',
         importance: Importance.max,
       priority: Priority.high,
-        sound: RawResourceAndroidNotificationSound('beautifull_azan')
+        playSound: true,
+        //sound: RawResourceAndroidNotificationSound('beautifull_azan')
     );
 
     const NotificationDetails platformChannelSpecifics =
     NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
+      id,
       title,
       body,
       scheduledTime,
@@ -163,6 +169,7 @@ class NotificationService {
       androidScheduleMode:AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );
+    print("Notification scheduled: $scheduledTime");
   }
 
 }

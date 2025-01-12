@@ -17,10 +17,8 @@ class Morning extends StatefulWidget {
 }
 
 class _MorningState extends State<Morning> {
-
   final List<String> messages = [
-    "أَصْـبَحْنا وَأَصْـبَحَ المُـلْكُ لله وَالحَمدُ لله ، لا إلهَ إلاّ اللّهُ وَحدَهُ لا شَريكَ لهُ، لهُ المُـلكُ ولهُ الحَمْـد، وهُوَ على كلّ شَيءٍ قدير ، رَبِّ أسْـأَلُـكَ خَـيرَ ما في هـذا اليوم وَخَـيرَ ما بَعْـدَه ، وَأَعـوذُ بِكَ مِنْ شَـرِّ ما في هـذا اليوم وَشَرِّ ما بَعْـدَه، رَبِّ أَعـوذُبِكَ مِنَ الْكَسَـلِ وَسـوءِ الْكِـبَر ، رَبِّ أَعـوذُ بِكَ مِنْ عَـذابٍ في النّـارِ وَعَـذابٍ في القَـبْر."
-    ,
+    "أَصْـبَحْنا وَأَصْـبَحَ المُـلْكُ لله وَالحَمدُ لله ، لا إلهَ إلاّ اللّهُ وَحدَهُ لا شَريكَ لهُ، لهُ المُـلكُ ولهُ الحَمْـد، وهُوَ على كلّ شَيءٍ قدير ، رَبِّ أسْـأَلُـكَ خَـيرَ ما في هـذا اليوم وَخَـيرَ ما بَعْـدَه ، وَأَعـوذُ بِكَ مِنْ شَـرِّ ما في هـذا اليوم وَشَرِّ ما بَعْـدَه، رَبِّ أَعـوذُبِكَ مِنَ الْكَسَـلِ وَسـوءِ الْكِـبَر ، رَبِّ أَعـوذُ بِكَ مِنْ عَـذابٍ في النّـارِ وَعَـذابٍ في القَـبْر.",
     "اللّهـمَّ أَنْتَ رَبِّـي لا إلهَ إلاّ أَنْتَ ، خَلَقْتَنـي وَأَنا عَبْـدُك ، وَأَنا عَلـى عَهْـدِكَ وَوَعْـدِكَ ما اسْتَـطَعْـت ، أَعـوذُبِكَ مِنْ شَـرِّ ما صَنَـعْت ، أَبـوءُ لَـكَ بِنِعْـمَتِـكَ عَلَـيَّ وَأَبـوءُ بِذَنْـبي فَاغْفـِرْ لي فَإِنَّـهُ لا يَغْـفِرُ الذُّنـوبَ إِلاّ أَنْتَ .",
     "رَضيـتُ بِاللهِ رَبَّـاً وَبِالإسْلامِ ديـناً وَبِمُحَـمَّدٍ صلى الله عليه وسلم نَبِيّـاً.",
     "للّهُـمَّ إِنِّـي أَصْبَـحْتُ أُشْـهِدُك ، وَأُشْـهِدُ حَمَلَـةَ عَـرْشِـك ، وَمَلَائِكَتَكَ ، وَجَمـيعَ خَلْـقِك ، أَنَّـكَ أَنْـتَ اللهُ لا إلهَ إلاّ أَنْـتَ وَحْـدَكَ لا شَريكَ لَـك ، وَأَنَّ ُ مُحَمّـداً عَبْـدُكَ وَرَسـولُـك.",
@@ -34,211 +32,261 @@ class _MorningState extends State<Morning> {
   String? endItemsValue;
   String? separateItemsValue;
   final List<String> endItems = ["نص ساعة", "ساعة", 'ساعتين'];
-  final List<String> separateItems = [ "دقيقة", 'دقيقتين'];
+  final List<String> separateItems = ["دقيقة", 'دقيقتين'];
 
   @override
   Widget build(BuildContext context) {
     print(TimeOfDay.now());
     var pro = Provider.of<MyProvider>(context);
     return Stack(
-        children: [
+      children: [
         Image.asset(
-        pro.getBackground(),
-    width: double.infinity,
-    fit: BoxFit.cover,
-    ),
-    Scaffold(
-    appBar: AppBar(
-    title: Text("أذكار الصباح",
-    style: Theme.of(context).textTheme.bodyLarge),
-    ),
-    body: Column(
-    children: [
-    SizedBox(
-    height: 20,
-    ),
-    Container(
-    height: 170.h,
-    width: double.infinity,
-    margin: EdgeInsetsDirectional.all(12),
-    padding: EdgeInsets.all(12),
-    decoration: BoxDecoration(
-    color:
-    Theme.of(context).colorScheme.primary.withOpacity(.7),
-    borderRadius: BorderRadiusDirectional.circular(16)),
-    child: Center(
-    child: Column(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-    Row(
-    children: [
-    Text("تفعيل الاشعارات",
-    style: Theme.of(context).textTheme.bodySmall),
-    Spacer(),
-    Switch(
-    activeColor:Theme.of(context).colorScheme.primary,
-    activeTrackColor: Colors.grey[100],
-    inactiveTrackColor:pro.isDark? Colors.grey:Colors.grey[200],
-    value:
-    NotificationService.isNotificationsEnabled,
-    onChanged: (value) {
-    setState(() {
-    NotificationService.isNotificationsEnabled =
-    value;
-    if (NotificationService
-        .isNotificationsEnabled) {
-    NotificationService.scheduleNotification(
-    messages, NotificationService.selectedTime,
-    NotificationService.intervalBetweenNotifications,NotificationService.endTime);
-    print("***************${NotificationService.scheduleNotification}");
-    }else{
-    NotificationService.flutterLocalNotificationsPlugin.cancelAll();
-    }
-    });
-    }),
-    ],
-    ),
-    Row(
-    children: [
-    Text(
-    " الوقت المحدد لارسال الاشعارات  ${NotificationService.selectedTime.hour}:${NotificationService.selectedTime.minute}",
-    style: Theme.of(context)
-        .textTheme
-        .bodySmall!
-        .copyWith(
-    fontSize: 16,
-    )),
-    Spacer(),
-    InkWell(
-    onTap: () {
-    pickTime();
-    },
-    child: Icon(
-    Icons.date_range,
-    color: Theme.of(context)
-        .colorScheme
-        .secondary,
-    size: 25,
-    ))
-    ],
-    ),
-    Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-    Text("وقت الانتهاء:",
-    style: Theme.of(context)
-        .textTheme
-        .bodySmall!
-        .copyWith(
-    fontSize: 10,
-    )),
-    DropdownButton<String>(
-    value: endItemsValue,
-    items: endItems.map((String item) {
-    return DropdownMenuItem<String>(
-    value: item,
-    child: Text(item),
-    );
-    }).toList(),
-    onChanged: (String? newValue) {
-    setState(() {
-    endItemsValue = newValue;
-    if(newValue==endItems[0]){
-    NotificationService.endTime=NotificationService.selectedTime
-        .add(Duration(minutes:30));
-    }else if(newValue==endItems[1]){
-    NotificationService.endTime=
-        NotificationService.selectedTime.add(Duration(hours:1));
-    }else{
-    NotificationService.endTime=
-        NotificationService.selectedTime.add(Duration(hours:2));
-    }
-    });
-    },
-    dropdownColor: Theme.of(context).colorScheme.surface,
+          pro.getBackground(),
+          width: double.infinity,
+          fit: BoxFit.cover,
+        ),
+        Scaffold(
+            appBar: AppBar(
+              title: Text("أذكار الصباح",
+                  style: Theme.of(context).textTheme.bodyLarge),
+            ),
+            body: Column(
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: 170.h,
+                  width: double.infinity,
+                  margin: EdgeInsetsDirectional.all(12),
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                      color:
+                          Theme.of(context).colorScheme.primary.withOpacity(.7),
+                      borderRadius: BorderRadiusDirectional.circular(16)),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Text("تفعيل الاشعارات",
+                                style: Theme.of(context).textTheme.bodySmall),
+                            Spacer(),
+                            Switch(
+                                activeColor:
+                                    Theme.of(context).colorScheme.primary,
+                                activeTrackColor: Colors.grey[100],
+                                inactiveTrackColor:
+                                    pro.isDark ? Colors.grey : Colors.grey[200],
+                                value:
+                                    NotificationService.isNotificationsEnabled,
+                                onChanged: (value) {
+                                  setState(() {
+                                    NotificationService.isNotificationsEnabled =
+                                        value;
+                                    if (NotificationService
+                                        .isNotificationsEnabled) {
+                                      NotificationService.scheduleNotification(
+                                          messages,
+                                          NotificationService.selectedTime,
+                                          NotificationService
+                                              .intervalBetweenNotifications,
+                                          NotificationService.endTime);
+                                      print(
+                                          "***************${NotificationService.scheduleNotification}");
+                                    } else {
+                                      NotificationService
+                                          .flutterLocalNotificationsPlugin
+                                          .cancelAll();
+                                    }
+                                  });
+                                }),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                    " الوقت المحدد لارسال الاشعارات  ",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(
+                                          fontSize: 14,
+                                        )),
+                                Text("${NotificationService.selectedTime.minute}:", style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                  fontSize: 16,
+                                )),
+                                Text(NotificationService.selectedTime.hour==24?"0":
+                                    NotificationService.selectedTime.hour>12?"${NotificationService.selectedTime.hour-12}":
+                                "${NotificationService.selectedTime.hour}", style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                  fontSize: 16,
+                                )
+                                ),
+                                SizedBox(width: 6.w,),
+                                Text(NotificationService.selectedTime.hour==24?"AM":
+                                NotificationService.selectedTime.hour>12?"PM":
+                                "AM", style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                  fontSize: 16,
+                                )
+                                ),
+                              ],
+                            ),
+                            Spacer(),
+                            InkWell(
+                                onTap: () {
+                                  pickTime();
+                                },
+                                child: Icon(
+                                  Icons.date_range,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  size: 25,
+                                ))
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("وقت الانتهاء:",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                      fontSize: 10,
+                                    )),
+                            DropdownButton<String>(
+                              value: endItemsValue,
+                              items: endItems.map((String item) {
+                                return DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(item),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  endItemsValue = newValue;
+                                  if (newValue == endItems[0]) {
+                                    NotificationService.endTime =
+                                        NotificationService.selectedTime
+                                            .add(Duration(minutes: 30));
+                                  } else if (newValue == endItems[1]) {
+                                    NotificationService.endTime =
+                                        NotificationService.selectedTime
+                                            .add(Duration(hours: 1));
+                                  } else {
+                                    NotificationService.endTime =
+                                        NotificationService.selectedTime
+                                            .add(Duration(hours: 2));
+                                  }
+                                });
+                              },
+                              dropdownColor:
+                                  Theme.of(context).colorScheme.surface,
 
-    style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-    icon: Center(
-    child: Icon(Icons.arrow_drop_down,
-    color:Theme.of(context).colorScheme.secondary),
-    ), // Dropdown icon
-    ),
-    Text("الفاصل بين الاشعارات:",
-    style: Theme.of(context)
-        .textTheme
-        .bodySmall!
-        .copyWith(
-    fontSize: 10,
-    )),
-    InkWell(
-    onTap: () {},
-    child: DropdownButton<String>(
-    value: separateItemsValue,
-    items: separateItems.map((String item) {
-    return DropdownMenuItem<String>(
-    value: item,
-    child: Text(item),
-    );
-    }).toList(),
-    onChanged: (String? newValue) {
-    setState(() {
-    separateItemsValue = newValue;
-    if (newValue==separateItems[0]){
-    NotificationService.intervalBetweenNotifications
-    =Duration(minutes: 1);
-    }else{
-    NotificationService.intervalBetweenNotifications
-    =Duration(minutes: 2);
-    }
-    });
-    },
-    dropdownColor:Theme.of(context).colorScheme.surface,
-    // Background color of dropdown
-    style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
-    // Text style of dropdown items
-    icon: Center(
-    child: Icon(Icons.arrow_drop_down,
-    color:Theme.of(context).colorScheme.secondary),
-    ), // Dropdown icon
-    ),
-    ),
-    ],
-    )
-    ],
-    ),
-    ),
-    ),
-    Expanded(
-    child: ListView.builder(
-    itemBuilder: (context, index) => Container(
-    margin: EdgeInsetsDirectional.all(12),
-    padding: EdgeInsets.all(16),
-    decoration: BoxDecoration(
-    color: Theme.of(context)
-        .colorScheme
-        .primary
-        .withOpacity(.7),
-    borderRadius: BorderRadiusDirectional.circular(16)),
-    child: Text(messages[index],
-    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-      fontSize: 18
-    )),
-    ),
-    itemCount: messages.length,
-    ),
-    ),
-    ],
-    )
-    )
-    ,
-    ]
-    ,
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground),
+                              icon: Center(
+                                child: Icon(Icons.arrow_drop_down,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                              ), // Dropdown icon
+                            ),
+                            Text("الفاصل بين الاشعارات:",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                      fontSize: 10,
+                                    )),
+                            InkWell(
+                              onTap: () {},
+                              child: DropdownButton<String>(
+                                value: separateItemsValue,
+                                items: separateItems.map((String item) {
+                                  return DropdownMenuItem<String>(
+                                    value: item,
+                                    child: Text(item),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    separateItemsValue = newValue;
+                                    if (newValue == separateItems[0]) {
+                                      NotificationService
+                                              .intervalBetweenNotifications =
+                                          Duration(minutes: 1);
+                                    } else {
+                                      NotificationService
+                                              .intervalBetweenNotifications =
+                                          Duration(minutes: 2);
+                                    }
+                                  });
+                                },
+                                dropdownColor:
+                                    Theme.of(context).colorScheme.surface,
+                                // Background color of dropdown
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
+                                // Text style of dropdown items
+                                icon: Center(
+                                  child: Icon(Icons.arrow_drop_down,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary),
+                                ), // Dropdown icon
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) => Container(
+                      margin: EdgeInsetsDirectional.all(12),
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(.7),
+                          borderRadius: BorderRadiusDirectional.circular(16)),
+                      child: Text(messages[index],
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(fontSize: 18)),
+                    ),
+                    itemCount: messages.length,
+                  ),
+                ),
+              ],
+            )),
+      ],
     );
   }
 
   Future<void> pickTime() async {
-    final TimeOfDay? timeOfDay =
-    await showTimePicker(
+    final TimeOfDay? timeOfDay = await showTimePicker(
       context: context,
       initialTime: TimeOfDay(
         hour: NotificationService.selectedTime.hour,
@@ -247,21 +295,14 @@ class _MorningState extends State<Morning> {
       initialEntryMode: TimePickerEntryMode.dial,
       confirmText: 'تاكيد',
       cancelText: 'الغاء',
-      builder:
-          (BuildContext context, Widget? child) {
+      builder: (BuildContext context, Widget? child) {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: Theme
-                  .of(context)
-                  .colorScheme
-                  .primary,
+              primary: Theme.of(context).colorScheme.primary,
               // Confirm button color
               onSurface: Colors.black,
-              onBackground: Theme
-                  .of(context)
-                  .colorScheme
-                  .primary,
+              onBackground: Theme.of(context).colorScheme.primary,
             ),
           ),
           child: child!,
@@ -269,8 +310,7 @@ class _MorningState extends State<Morning> {
       },
     );
 
-    if (timeOfDay != null &&
-        timeOfDay != NotificationService.selectedTime)
+    if (timeOfDay != null && timeOfDay != NotificationService.selectedTime)
       setState(() {
         NotificationService.selectedTime = DateTime(
           NotificationService.selectedTime.year, // Keep the same year
