@@ -6,10 +6,8 @@ import 'package:timezone/timezone.dart' as tz;
 class NotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  static bool isNotificationsEnabled = false;
   static Duration intervalBetweenNotifications = const Duration(seconds: 10);
   static Duration intervalBetweenNightNotifications = const Duration(seconds: 10);
-  static DateTime selectedTime = DateTime.now();
   static DateTime selectedTimeNight = DateTime.now();
   static DateTime endTime = DateTime.now().add(Duration(minutes:30));
   static DateTime endTimeNight = DateTime.now().add(Duration(minutes:30));

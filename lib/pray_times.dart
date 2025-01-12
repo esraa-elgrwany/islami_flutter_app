@@ -9,6 +9,8 @@ import 'package:islami_project/providers/my_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'Hive_Service.dart';
+
 class PrayTimesScreen extends StatefulWidget {
   static const String routeName = "PrayTimes";
 
@@ -20,7 +22,16 @@ class PrayTimesScreen extends StatefulWidget {
 
 class _PrayTimesScreenState extends State<PrayTimesScreen> {
   bool isSwitched = false;
+  @override
+  void initState() {
+    super.initState();
+    loadSwitchState();
+  }
 
+  Future<void> loadSwitchState() async {
+    isSwitched = await HiveService.getSwitchState('praySwitch');
+    setState(() {});
+  }
   @override
   Widget build(BuildContext context) {
     var pro = Provider.of<MyProvider>(context);
@@ -64,7 +75,7 @@ class _PrayTimesScreenState extends State<PrayTimesScreen> {
                     inactiveTrackColor:
                         pro.isDark ? Colors.grey : Colors.grey[200],
                     value: isSwitched,
-                    onChanged: (value) {
+                    onChanged: (value) async{
                       setState(() {
                         isSwitched = value;
                         if (isSwitched) {
@@ -74,6 +85,7 @@ class _PrayTimesScreenState extends State<PrayTimesScreen> {
                               .cancelAll();
                         }
                       });
+                      await HiveService.saveSwitchState('praySwitch', value);
                     }),
               ),
             ],

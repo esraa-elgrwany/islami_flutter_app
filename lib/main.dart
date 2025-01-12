@@ -24,6 +24,7 @@ void main() async{
   await Hive.initFlutter();
   await Hive.openBox("counterBox");
   await Hive.openBox("tempCounterBox");
+  await Hive.openBox('settings');
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
       create: (context) => MyProvider(),

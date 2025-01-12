@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:islami_project/Hive_Service.dart';
 import 'package:islami_project/notification/notification.dart';
 import 'package:islami_project/providers/my_provider.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +33,16 @@ class _MorningState extends State<Night> {
   String? separateItemsValue;
   final List<String> endItems = ["نص ساعة", "ساعة", 'ساعتين'];
   final List<String> separateItems = ["دقيقة", 'دقيقتين'];
+  @override
+  void initState() {
+    super.initState();
+    loadSwitchState();
+  }
 
+  Future<void> loadSwitchState() async {
+    isSwitched = await HiveService.getSwitchState('nightSwitch');
+    setState(() {});
+  }
   @override
   Widget build(BuildContext context) {
     print(TimeOfDay.now());
@@ -78,7 +88,7 @@ class _MorningState extends State<Night> {
                                 inactiveTrackColor:pro.isDark? Colors.grey:Colors.grey[200],
                                 value:
                                 isSwitched,
-                                onChanged: (value) {
+                                onChanged: (value) async{
                                   setState(() {
                                    isSwitched=
                                         value;
@@ -93,6 +103,7 @@ class _MorningState extends State<Night> {
                                       NotificationService.flutterLocalNotificationsPlugin.cancelAll();
                                     }
                                   });
+                                  await HiveService.saveSwitchState('nightSwitch', value);
                                 }),
                           ],
                         ),

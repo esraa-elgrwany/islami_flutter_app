@@ -7,6 +7,8 @@ import 'package:islami_project/tabs/settingtab.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+import 'Hive_Service.dart';
+
 class Morning extends StatefulWidget {
   static const String routeName = "morning";
 
@@ -17,6 +19,8 @@ class Morning extends StatefulWidget {
 }
 
 class _MorningState extends State<Morning> {
+  bool isSwitched=false;
+   DateTime selectedTime = DateTime.now();
   final List<String> messages = [
     "أَصْـبَحْنا وَأَصْـبَحَ المُـلْكُ لله وَالحَمدُ لله ، لا إلهَ إلاّ اللّهُ وَحدَهُ لا شَريكَ لهُ، لهُ المُـلكُ ولهُ الحَمْـد، وهُوَ على كلّ شَيءٍ قدير ، رَبِّ أسْـأَلُـكَ خَـيرَ ما في هـذا اليوم وَخَـيرَ ما بَعْـدَه ، وَأَعـوذُ بِكَ مِنْ شَـرِّ ما في هـذا اليوم وَشَرِّ ما بَعْـدَه، رَبِّ أَعـوذُبِكَ مِنَ الْكَسَـلِ وَسـوءِ الْكِـبَر ، رَبِّ أَعـوذُ بِكَ مِنْ عَـذابٍ في النّـارِ وَعَـذابٍ في القَـبْر.",
     "اللّهـمَّ أَنْتَ رَبِّـي لا إلهَ إلاّ أَنْتَ ، خَلَقْتَنـي وَأَنا عَبْـدُك ، وَأَنا عَلـى عَهْـدِكَ وَوَعْـدِكَ ما اسْتَـطَعْـت ، أَعـوذُبِكَ مِنْ شَـرِّ ما صَنَـعْت ، أَبـوءُ لَـكَ بِنِعْـمَتِـكَ عَلَـيَّ وَأَبـوءُ بِذَنْـبي فَاغْفـِرْ لي فَإِنَّـهُ لا يَغْـفِرُ الذُّنـوبَ إِلاّ أَنْتَ .",
@@ -33,6 +37,17 @@ class _MorningState extends State<Morning> {
   String? separateItemsValue;
   final List<String> endItems = ["نص ساعة", "ساعة", 'ساعتين'];
   final List<String> separateItems = ["دقيقة", 'دقيقتين'];
+
+  @override
+  void initState() {
+    super.initState();
+    loadSwitchState();
+  }
+
+  Future<void> loadSwitchState() async {
+    isSwitched = await HiveService.getSwitchState('morningSwitch');
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,16 +95,14 @@ class _MorningState extends State<Morning> {
                                 inactiveTrackColor:
                                     pro.isDark ? Colors.grey : Colors.grey[200],
                                 value:
-                                    NotificationService.isNotificationsEnabled,
-                                onChanged: (value) {
+                                    isSwitched,
+                                onChanged: (value) async{
                                   setState(() {
-                                    NotificationService.isNotificationsEnabled =
+                                   isSwitched =
                                         value;
-                                    if (NotificationService
-                                        .isNotificationsEnabled) {
+                                    if (isSwitched) {
                                       NotificationService.scheduleNotification(
-                                          messages,
-                                          NotificationService.selectedTime,
+                                          messages, selectedTime,
                                           NotificationService
                                               .intervalBetweenNotifications,
                                           NotificationService.endTime);
@@ -101,6 +114,7 @@ class _MorningState extends State<Morning> {
                                           .cancelAll();
                                     }
                                   });
+                                  await HiveService.saveSwitchState('morningSwitch', value);
                                 }),
                           ],
                         ),
@@ -116,15 +130,15 @@ class _MorningState extends State<Morning> {
                                         .copyWith(
                                           fontSize: 14,
                                         )),
-                                Text("${NotificationService.selectedTime.minute}:", style: Theme.of(context)
+                                Text("${selectedTime.minute}:", style: Theme.of(context)
                                     .textTheme
                                     .bodySmall!
                                     .copyWith(
                                   fontSize: 16,
                                 )),
-                                Text(NotificationService.selectedTime.hour==24?"0":
-                                    NotificationService.selectedTime.hour>12?"${NotificationService.selectedTime.hour-12}":
-                                "${NotificationService.selectedTime.hour}", style: Theme.of(context)
+                                Text(selectedTime.hour==24?"0":
+                                    selectedTime.hour>12?"${selectedTime.hour-12}":
+                                "${selectedTime.hour}", style: Theme.of(context)
                                     .textTheme
                                     .bodySmall!
                                     .copyWith(
@@ -132,8 +146,8 @@ class _MorningState extends State<Morning> {
                                 )
                                 ),
                                 SizedBox(width: 6.w,),
-                                Text(NotificationService.selectedTime.hour==24?"AM":
-                                NotificationService.selectedTime.hour>12?"PM":
+                                Text(selectedTime.hour==24?"AM":
+                                selectedTime.hour>12?"PM":
                                 "AM", style: Theme.of(context)
                                     .textTheme
                                     .bodySmall!
@@ -179,15 +193,15 @@ class _MorningState extends State<Morning> {
                                   endItemsValue = newValue;
                                   if (newValue == endItems[0]) {
                                     NotificationService.endTime =
-                                        NotificationService.selectedTime
+                                        selectedTime
                                             .add(Duration(minutes: 30));
                                   } else if (newValue == endItems[1]) {
                                     NotificationService.endTime =
-                                        NotificationService.selectedTime
+                                        selectedTime
                                             .add(Duration(hours: 1));
                                   } else {
                                     NotificationService.endTime =
-                                        NotificationService.selectedTime
+                                        selectedTime
                                             .add(Duration(hours: 2));
                                   }
                                 });
@@ -289,8 +303,8 @@ class _MorningState extends State<Morning> {
     final TimeOfDay? timeOfDay = await showTimePicker(
       context: context,
       initialTime: TimeOfDay(
-        hour: NotificationService.selectedTime.hour,
-        minute: NotificationService.selectedTime.minute,
+        hour: selectedTime.hour,
+        minute: selectedTime.minute,
       ),
       initialEntryMode: TimePickerEntryMode.dial,
       confirmText: 'تاكيد',
@@ -310,12 +324,12 @@ class _MorningState extends State<Morning> {
       },
     );
 
-    if (timeOfDay != null && timeOfDay != NotificationService.selectedTime)
+    if (timeOfDay != null && timeOfDay != selectedTime)
       setState(() {
-        NotificationService.selectedTime = DateTime(
-          NotificationService.selectedTime.year, // Keep the same year
-          NotificationService.selectedTime.month, // Keep the same month
-          NotificationService.selectedTime.day, // Keep the same day
+        selectedTime = DateTime(
+          selectedTime.year, // Keep the same year
+          selectedTime.month, // Keep the same month
+          selectedTime.day, // Keep the same day
           timeOfDay.hour, // Set the new hour
           timeOfDay.minute, // Set the new minute
         );
