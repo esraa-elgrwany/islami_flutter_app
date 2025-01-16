@@ -38,7 +38,7 @@ class _PrayTimesScreenState extends State<PrayTimesScreen> {
 
     final coordinates = Coordinates(30.0444, 31.2357);
     final params = CalculationMethod.karachi.getParameters();
-    params.madhab = Madhab.hanafi;
+    params.madhab = Madhab.shafi;
     final prayerTimes = PrayerTimes.today(coordinates, params);
     return Stack(
       children: [

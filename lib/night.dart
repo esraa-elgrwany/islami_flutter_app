@@ -12,10 +12,11 @@ class Night extends StatefulWidget {
   const Night({super.key});
 
   @override
-  State<Night> createState() => _MorningState();
+  State<Night> createState() => _NightState();
 }
 
-class _MorningState extends State<Night> {
+class _NightState extends State<Night> {
+   DateTime selectedTimeNight = DateTime.now();
   bool isSwitched = false;
   final List<String> messages = [
     "أَمسينا وَأَمسي المُـلْكُ لله وَالحَمدُ لله ، لا إلهَ إلاّ اللّهُ وَحدَهُ لا شَريكَ لهُ، لهُ المُـلكُ ولهُ الحَمْـد، وهُوَ على كلّ شَيءٍ قدير ، رَبِّ أسْـأَلُـكَ خَـيرَ ما في هـذا اليوم وَخَـيرَ ما بَعْـدَه ، وَأَعـوذُ بِكَ مِنْ شَـرِّ ما في هـذا اليوم وَشَرِّ ما بَعْـدَه، رَبِّ أَعـوذُبِكَ مِنَ الْكَسَـلِ وَسـوءِ الْكِـبَر ، رَبِّ أَعـوذُ بِكَ مِنْ عَـذابٍ في النّـارِ وَعَـذابٍ في القَـبْر.",
@@ -36,13 +37,16 @@ class _MorningState extends State<Night> {
   @override
   void initState() {
     super.initState();
-    loadSwitchState();
+    loadNightSettings();
   }
 
-  Future<void> loadSwitchState() async {
-    isSwitched = await HiveService.getSwitchState('nightSwitch');
-    setState(() {});
-  }
+   Future<void> loadNightSettings() async {
+     isSwitched = await HiveService.getSwitchState('nightSwitch');
+     selectedTimeNight = await HiveService.getTime('nightSelectedTime') ?? DateTime.now();
+     endItemsValue = await HiveService.getEndTime('nightEndItemsValue') ?? 'ساعة';
+     separateItemsValue = await HiveService.getSeparateTime('nightSeparateItemsValue') ?? 'دقيقة';
+     setState(() {});
+   }
   @override
   Widget build(BuildContext context) {
     print(TimeOfDay.now());
@@ -94,7 +98,7 @@ class _MorningState extends State<Night> {
                                         value;
                                     if (isSwitched) {
                                       NotificationService.scheduleNotification(
-                                          messages, NotificationService.selectedTimeNight,
+                                          messages, selectedTimeNight,
                                           NotificationService.intervalBetweenNightNotifications,
                                           NotificationService.endTimeNight);
                                       print("***************${
@@ -119,15 +123,15 @@ class _MorningState extends State<Night> {
                                         .copyWith(
                                       fontSize: 14,
                                     )),
-                                Text("${NotificationService.selectedTimeNight.minute}:", style: Theme.of(context)
+                                Text("${selectedTimeNight.minute}:", style: Theme.of(context)
                                     .textTheme
                                     .bodySmall!
                                     .copyWith(
                                   fontSize: 16,
                                 )),
-                                Text(NotificationService.selectedTimeNight.hour==24?"0":
-                                NotificationService.selectedTimeNight.hour>12?"${NotificationService.selectedTimeNight.hour-12}":
-                                "${NotificationService.selectedTimeNight.hour}", style: Theme.of(context)
+                                Text(selectedTimeNight.hour==00?"12":
+                                selectedTimeNight.hour>12?"${selectedTimeNight.hour-12}":
+                                "${selectedTimeNight.hour}", style: Theme.of(context)
                                     .textTheme
                                     .bodySmall!
                                     .copyWith(
@@ -135,8 +139,8 @@ class _MorningState extends State<Night> {
                                 )
                                 ),
                                 SizedBox(width: 6.w,),
-                                Text(NotificationService.selectedTimeNight.hour==24?"AM":
-                                NotificationService.selectedTimeNight.hour>12?"PM":
+                                Text(selectedTimeNight.hour==00?"AM":
+                                selectedTimeNight.hour>=12?"PM":
                                 "AM", style: Theme.of(context)
                                     .textTheme
                                     .bodySmall!
@@ -178,19 +182,20 @@ class _MorningState extends State<Night> {
                                   child: Text(item),
                                 );
                               }).toList(),
-                              onChanged: (String? newValue) {
+                              onChanged: (String? newValue) async{
                                 setState(() {
                                   endItemsValue = newValue;
                                   if(newValue==endItems[0]){
-                                    NotificationService.endTime=NotificationService.selectedTimeNight.add(Duration(minutes:30));
+                                    NotificationService.endTime=selectedTimeNight.add(Duration(minutes:30));
                                   }else if(newValue==endItems[1]){
                                     NotificationService.endTime=
-                                        NotificationService.selectedTimeNight.add(Duration(hours:1));
+                                        selectedTimeNight.add(Duration(hours:1));
                                   }else{
                                     NotificationService.endTime=
-                                        NotificationService.selectedTimeNight.add(Duration(hours:2));
+                                        selectedTimeNight.add(Duration(hours:2));
                                   }
                                 });
+                                await HiveService.saveEndTime('nightEndItemsValue',endItemsValue!);
                               },
                               dropdownColor: Theme.of(context).colorScheme.surface,
 
@@ -217,7 +222,7 @@ class _MorningState extends State<Night> {
                                     child: Text(item),
                                   );
                                 }).toList(),
-                                onChanged: (String? newValue) {
+                                onChanged: (String? newValue) async{
                                   setState(() {
                                     separateItemsValue = newValue;
                                     if (newValue==separateItems[0]){
@@ -228,6 +233,7 @@ class _MorningState extends State<Night> {
                                       =Duration(minutes: 2);
                                     }
                                   });
+                                  await HiveService.saveSeparateTime('nightSeparateItemsValue', separateItemsValue!);
                                 },
                                 dropdownColor:Theme.of(context).colorScheme.surface,
                                 // Background color of dropdown
@@ -272,8 +278,8 @@ class _MorningState extends State<Night> {
     final TimeOfDay? timeOfDay = await showTimePicker(
       context: context,
       initialTime: TimeOfDay(
-        hour:NotificationService.selectedTimeNight.hour,
-        minute: NotificationService.selectedTimeNight.minute,
+        hour:selectedTimeNight.hour,
+        minute: selectedTimeNight.minute,
       ),
       initialEntryMode: TimePickerEntryMode.dial,
       confirmText: 'تاكيد',
@@ -293,15 +299,16 @@ class _MorningState extends State<Night> {
       },
     );
 
-    if (timeOfDay != null && timeOfDay != NotificationService.selectedTimeNight)
+    if (timeOfDay != null && timeOfDay != selectedTimeNight)
       setState(() {
-        NotificationService.selectedTimeNight = DateTime(
-          NotificationService.selectedTimeNight.year, // Keep the same year
-          NotificationService.selectedTimeNight.month, // Keep the same month
-          NotificationService.selectedTimeNight.day, // Keep the same day
+        selectedTimeNight = DateTime(
+          selectedTimeNight.year, // Keep the same year
+          selectedTimeNight.month, // Keep the same month
+          selectedTimeNight.day, // Keep the same day
           timeOfDay.hour, // Set the new hour
           timeOfDay.minute, // Set the new minute
         );
       });
+    await HiveService.saveTime('nightSelectedTime', selectedTimeNight);
   }
 }

@@ -19,8 +19,8 @@ class Morning extends StatefulWidget {
 }
 
 class _MorningState extends State<Morning> {
-  bool isSwitched=false;
-   DateTime selectedTime = DateTime.now();
+  bool isSwitched = false;
+  DateTime selectedTime = DateTime.now();
   final List<String> messages = [
     "أَصْـبَحْنا وَأَصْـبَحَ المُـلْكُ لله وَالحَمدُ لله ، لا إلهَ إلاّ اللّهُ وَحدَهُ لا شَريكَ لهُ، لهُ المُـلكُ ولهُ الحَمْـد، وهُوَ على كلّ شَيءٍ قدير ، رَبِّ أسْـأَلُـكَ خَـيرَ ما في هـذا اليوم وَخَـيرَ ما بَعْـدَه ، وَأَعـوذُ بِكَ مِنْ شَـرِّ ما في هـذا اليوم وَشَرِّ ما بَعْـدَه، رَبِّ أَعـوذُبِكَ مِنَ الْكَسَـلِ وَسـوءِ الْكِـبَر ، رَبِّ أَعـوذُ بِكَ مِنْ عَـذابٍ في النّـارِ وَعَـذابٍ في القَـبْر.",
     "اللّهـمَّ أَنْتَ رَبِّـي لا إلهَ إلاّ أَنْتَ ، خَلَقْتَنـي وَأَنا عَبْـدُك ، وَأَنا عَلـى عَهْـدِكَ وَوَعْـدِكَ ما اسْتَـطَعْـت ، أَعـوذُبِكَ مِنْ شَـرِّ ما صَنَـعْت ، أَبـوءُ لَـكَ بِنِعْـمَتِـكَ عَلَـيَّ وَأَبـوءُ بِذَنْـبي فَاغْفـِرْ لي فَإِنَّـهُ لا يَغْـفِرُ الذُّنـوبَ إِلاّ أَنْتَ .",
@@ -41,11 +41,14 @@ class _MorningState extends State<Morning> {
   @override
   void initState() {
     super.initState();
-    loadSwitchState();
+    loadMorningSettings();
   }
 
-  Future<void> loadSwitchState() async {
+  Future<void> loadMorningSettings() async {
     isSwitched = await HiveService.getSwitchState('morningSwitch');
+    selectedTime = await HiveService.getTime('morningSelectedTime') ?? DateTime.now();
+    endItemsValue = await HiveService.getEndTime('morningEndItemsValue') ?? 'ساعة';
+    separateItemsValue = await HiveService.getSeparateTime('morningSeparateItemsValue') ?? 'دقيقة';
     setState(() {});
   }
 
@@ -94,15 +97,14 @@ class _MorningState extends State<Morning> {
                                 activeTrackColor: Colors.grey[100],
                                 inactiveTrackColor:
                                     pro.isDark ? Colors.grey : Colors.grey[200],
-                                value:
-                                    isSwitched,
-                                onChanged: (value) async{
+                                value: isSwitched,
+                                onChanged: (value) async {
                                   setState(() {
-                                   isSwitched =
-                                        value;
+                                    isSwitched = value;
                                     if (isSwitched) {
                                       NotificationService.scheduleNotification(
-                                          messages, selectedTime,
+                                          messages,
+                                          selectedTime,
                                           NotificationService
                                               .intervalBetweenNotifications,
                                           NotificationService.endTime);
@@ -114,7 +116,8 @@ class _MorningState extends State<Morning> {
                                           .cancelAll();
                                     }
                                   });
-                                  await HiveService.saveSwitchState('morningSwitch', value);
+                                  await HiveService.saveSwitchState(
+                                      'morningSwitch', value);
                                 }),
                           ],
                         ),
@@ -122,39 +125,47 @@ class _MorningState extends State<Morning> {
                           children: [
                             Row(
                               children: [
-                                Text(
-                                    " الوقت المحدد لارسال الاشعارات  ",
+                                Text(" الوقت المحدد لارسال الاشعارات  ",
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodySmall!
                                         .copyWith(
                                           fontSize: 14,
                                         )),
-                                Text("${selectedTime.minute}:", style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .copyWith(
-                                  fontSize: 16,
-                                )),
-                                Text(selectedTime.hour==24?"0":
-                                    selectedTime.hour>12?"${selectedTime.hour-12}":
-                                "${selectedTime.hour}", style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .copyWith(
-                                  fontSize: 16,
-                                )
+                                Text("${selectedTime.minute}:",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(
+                                          fontSize: 16,
+                                        )),
+                                Text(
+                                    selectedTime.hour == 00
+                                        ? "12"
+                                        : selectedTime.hour > 12
+                                            ? "${selectedTime.hour - 12}"
+                                            : "${selectedTime.hour}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(
+                                          fontSize: 16,
+                                        )),
+                                SizedBox(
+                                  width: 6.w,
                                 ),
-                                SizedBox(width: 6.w,),
-                                Text(selectedTime.hour==24?"AM":
-                                selectedTime.hour>12?"PM":
-                                "AM", style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .copyWith(
-                                  fontSize: 16,
-                                )
-                                ),
+                                Text(
+                                    selectedTime.hour == 00
+                                        ? "AM"
+                                        : selectedTime.hour >= 12
+                                            ? "PM"
+                                            : "AM",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(
+                                          fontSize: 16,
+                                        )),
                               ],
                             ),
                             Spacer(),
@@ -188,23 +199,21 @@ class _MorningState extends State<Morning> {
                                   child: Text(item),
                                 );
                               }).toList(),
-                              onChanged: (String? newValue) {
+                              onChanged: (String? newValue) async {
                                 setState(() {
                                   endItemsValue = newValue;
                                   if (newValue == endItems[0]) {
                                     NotificationService.endTime =
-                                        selectedTime
-                                            .add(Duration(minutes: 30));
+                                        selectedTime.add(Duration(minutes: 30));
                                   } else if (newValue == endItems[1]) {
                                     NotificationService.endTime =
-                                        selectedTime
-                                            .add(Duration(hours: 1));
+                                        selectedTime.add(Duration(hours: 1));
                                   } else {
                                     NotificationService.endTime =
-                                        selectedTime
-                                            .add(Duration(hours: 2));
+                                        selectedTime.add(Duration(hours: 2));
                                   }
                                 });
+                                await HiveService.saveEndTime('morningEndItemsValue',endItemsValue!);
                               },
                               dropdownColor:
                                   Theme.of(context).colorScheme.surface,
@@ -237,7 +246,7 @@ class _MorningState extends State<Morning> {
                                     child: Text(item),
                                   );
                                 }).toList(),
-                                onChanged: (String? newValue) {
+                                onChanged: (String? newValue) async {
                                   setState(() {
                                     separateItemsValue = newValue;
                                     if (newValue == separateItems[0]) {
@@ -250,6 +259,8 @@ class _MorningState extends State<Morning> {
                                           Duration(minutes: 2);
                                     }
                                   });
+                                  await HiveService.saveSeparateTime('morningSeparateItemsValue',
+                                      separateItemsValue!);
                                 },
                                 dropdownColor:
                                     Theme.of(context).colorScheme.surface,
@@ -314,7 +325,6 @@ class _MorningState extends State<Morning> {
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
               primary: Theme.of(context).colorScheme.primary,
-              // Confirm button color
               onSurface: Colors.black,
               onBackground: Theme.of(context).colorScheme.primary,
             ),
@@ -324,15 +334,17 @@ class _MorningState extends State<Morning> {
       },
     );
 
-    if (timeOfDay != null && timeOfDay != selectedTime)
+    if (timeOfDay != null) {
       setState(() {
         selectedTime = DateTime(
-          selectedTime.year, // Keep the same year
-          selectedTime.month, // Keep the same month
-          selectedTime.day, // Keep the same day
-          timeOfDay.hour, // Set the new hour
-          timeOfDay.minute, // Set the new minute
+          selectedTime.year,
+          selectedTime.month,
+          selectedTime.day,
+          timeOfDay.hour,
+          timeOfDay.minute,
         );
       });
+      await HiveService.saveTime('morningSelectedTime',selectedTime);
+    }
   }
 }
